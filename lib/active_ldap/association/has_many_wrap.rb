@@ -50,8 +50,14 @@ module ActiveLdap
 
         klass = foreign_class
         requested_targets.collect do |name|
-          found_targets[name] || klass.new(name)
-        end
+          if found_targets[name]
+            found_targets[name]
+          elsif name.class =~ /#{klass.base.to_s}$/
+            klass.new(name)
+          else
+            nil
+          end
+        end.compact
       end
 
       def foreign_key
