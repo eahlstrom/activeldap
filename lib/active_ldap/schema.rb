@@ -550,6 +550,9 @@ module ActiveLdap
         when Hash
           normalize_hash_value(value, have_binary_mark)
         else
+          if RUBY_VERSION >= "1.9" && have_binary_mark
+            value.force_encoding('BINARY')
+          end
           if value.blank?
             value = []
           else
